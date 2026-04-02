@@ -1,8 +1,6 @@
 /**
- * OpenClaude startup screen — filled-block text logo with sunset gradient.
+ * PertrellyClaude startup screen — animated blue gradient logo.
  * Called once at CLI startup before the Ink UI renders.
- *
- * Addresses: https://github.com/Izaiaspertrelly/openclaude/issues/55
  */
 
 declare const MACRO: { VERSION: string; DISPLAY_VERSION?: string }
@@ -10,6 +8,9 @@ declare const MACRO: { VERSION: string; DISPLAY_VERSION?: string }
 const ESC = '\x1b['
 const RESET = `${ESC}0m`
 const DIM = `${ESC}2m`
+const BOLD = `${ESC}1m`
+const HIDE_CURSOR = `${ESC}?25l`
+const SHOW_CURSOR = `${ESC}?25h`
 
 type RGB = [number, number, number]
 const rgb = (r: number, g: number, b: number) => `${ESC}38;2;${r};${g};${b}m`
@@ -33,47 +34,58 @@ function gradAt(stops: RGB[], t: number): RGB {
 function paintLine(text: string, stops: RGB[], lineT: number): string {
   let out = ''
   for (let i = 0; i < text.length; i++) {
-    const t = text.length > 1 ? lineT * 0.5 + (i / (text.length - 1)) * 0.5 : lineT
+    const t = text.length > 1 ? lineT * 0.4 + (i / (text.length - 1)) * 0.6 : lineT
     const [r, g, b] = gradAt(stops, t)
     out += `${rgb(r, g, b)}${text[i]}`
   }
   return out + RESET
 }
 
-// ─── Colors ───────────────────────────────────────────────────────────────────
+function sleepSync(ms: number): void {
+  const end = Date.now() + ms
+  while (Date.now() < end) { /* busy wait */ }
+}
 
-const SUNSET_GRAD: RGB[] = [
-  [255, 180, 100],
-  [240, 140, 80],
-  [217, 119, 87],
-  [193, 95, 60],
-  [160, 75, 55],
-  [130, 60, 50],
+// ─── Blue Gradient Colors ─────────────────────────────────────────────────────
+
+const BLUE_GRAD: RGB[] = [
+  [100, 200, 255],
+  [60, 170, 255],
+  [40, 140, 250],
+  [20, 110, 235],
+  [10, 85, 210],
+  [5, 60, 180],
 ]
 
-const ACCENT: RGB = [240, 148, 100]
-const CREAM: RGB = [220, 195, 170]
-const DIMCOL: RGB = [120, 100, 82]
-const BORDER: RGB = [100, 80, 65]
-
-// ─── Filled Block Text Logo ───────────────────────────────────────────────────
-
-const LOGO_OPEN = [
-  `  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2557  \u2588\u2588\u2557`,
-  `  \u2588\u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u2550\u255d \u2588\u2588\u2588\u2557 \u2588\u2588\u2551`,
-  `  \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2557   \u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2551`,
-  `  \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u2550\u255d \u2588\u2588\u2554\u2550\u2550\u2550\u255d   \u2588\u2588\u2554\u2588\u2588\u2588\u2588\u2551`,
-  `  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2551       \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2551 \u255a\u2588\u2588\u2588\u2551`,
-  `  \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u255d       \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u255d  \u255a\u2550\u2550\u255d`,
+const GLOW_GRAD: RGB[] = [
+  [180, 230, 255],
+  [140, 210, 255],
+  [100, 190, 255],
 ]
 
-const LOGO_CLAUDE = [
-  `  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2557      \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2557   \u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557`,
-  `  \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u2550\u255d \u2588\u2588\u2551      \u2588\u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u2550\u2550\u255d`,
-  `  \u2588\u2588\u2551       \u2588\u2588\u2551      \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2557  `,
-  `  \u2588\u2588\u2551       \u2588\u2588\u2551      \u2588\u2588\u2554\u2550\u2550\u2550\u2588\u2588\u2551 \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2551   \u2588\u2588\u2551 \u2588\u2588\u2554\u2550\u2550\u2550\u255d  `,
-  `  \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557\u2588\u2588\u2551   \u2588\u2588\u2551 \u255a\u2588\u2588\u2588\u2588\u2588\u2588\u2554\u255d \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2551 \u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2588\u2557`,
-  `  \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d\u255a\u2550\u255d   \u255a\u2550\u255d  \u255a\u2550\u2550\u2550\u2550\u2550\u255d  \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d \u255a\u2550\u2550\u2550\u2550\u2550\u2550\u2550\u255d`,
+const ACCENT: RGB = [80, 160, 255]
+const CREAM: RGB = [200, 220, 255]
+const DIMCOL: RGB = [80, 110, 160]
+const BORDER: RGB = [50, 90, 160]
+
+// ─── Block Text Logo ──────────────────────────────────────────────────────────
+
+const LOGO_PERTRELLY = [
+  `  ██████╗ ███████╗██████╗ ████████╗██████╗ ███████╗██╗     ██╗  ██╗   ██╗`,
+  `  ██╔══██╗██╔════╝██╔══██╗╚══██╔══╝██╔══██╗██╔════╝██║     ██║  ╚██╗ ██╔╝`,
+  `  ██████╔╝█████╗  ██████╔╝   ██║   ██████╔╝█████╗  ██║     ██║   ╚████╔╝ `,
+  `  ██╔═══╝ ██╔══╝  ██╔══██╗   ██║   ██╔══██╗██╔══╝  ██║     ██║    ╚██╔╝  `,
+  `  ██║     ███████╗██║  ██║   ██║   ██║  ██║███████╗███████╗███████╗██║   `,
+  `  ╚═╝     ╚══════╝╚═╝  ╚═╝   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝╚═╝   `,
+]
+
+const LOGO_CLAUDINHO = [
+  `  ██████╗██╗      █████╗ ██╗   ██╗██████╗ ██╗███╗   ██╗██╗  ██╗ ██████╗ `,
+  `  ██╔═══╝██║     ██╔══██╗██║   ██║██╔══██╗██║████╗  ██║██║  ██║██╔═══██╗`,
+  `  ██║    ██║     ███████║██║   ██║██║  ██║██║██╔██╗ ██║███████║██║   ██║`,
+  `  ██║    ██║     ██╔══██║██║   ██║██║  ██║██║██║╚██╗██║██╔══██║██║   ██║`,
+  `  ██████╗███████╗██║  ██║╚██████╔╝██████╔╝██║██║ ╚████║██║  ██║╚██████╔╝`,
+  `  ╚═════╝╚══════╝╚═╝  ╚═╝ ╚═════╝ ╚═════╝ ╚═╝╚═╝  ╚═══╝╚═╝  ╚═╝ ╚═════╝ `,
 ]
 
 // ─── Provider detection ───────────────────────────────────────────────────────
@@ -91,8 +103,7 @@ function detectProvider(): { name: string; model: string; baseUrl: string; isLoc
 
   if (useGithub) {
     const model = process.env.OPENAI_MODEL || 'github:copilot'
-    const baseUrl =
-      process.env.OPENAI_BASE_URL || 'https://models.github.ai/inference'
+    const baseUrl = process.env.OPENAI_BASE_URL || 'https://models.github.ai/inference'
     return { name: 'GitHub Models', model, baseUrl, isLocal: false }
   }
 
@@ -111,8 +122,7 @@ function detectProvider(): { name: string; model: string; baseUrl: string; isLoc
     else if (/localhost:1234/i.test(baseUrl))                         name = 'LM Studio'
     else if (/llama/i.test(rawModel))                                    name = 'Meta Llama'
     else if (isLocal)                                                  name = 'Local'
-    
-    // Resolve model alias to actual model name + reasoning effort
+
     let displayModel = rawModel
     const codexAliases: Record<string, { model: string; reasoningEffort?: string }> = {
       codexplan: { model: 'gpt-5.4', reasoningEffort: 'high' },
@@ -134,11 +144,10 @@ function detectProvider(): { name: string; model: string; baseUrl: string; isLoc
         displayModel = `${displayModel} (${resolved.reasoningEffort})`
       }
     }
-    
+
     return { name, model: displayModel, baseUrl, isLocal }
   }
 
-  // Default: Anthropic
   const model = process.env.ANTHROPIC_MODEL || process.env.CLAUDE_MODEL || 'claude-sonnet-4-6'
   return { name: 'Anthropic', model, baseUrl: 'https://api.anthropic.com', isLocal: false }
 }
@@ -147,67 +156,109 @@ function detectProvider(): { name: string; model: string; baseUrl: string; isLoc
 
 function boxRow(content: string, width: number, rawLen: number): string {
   const pad = Math.max(0, width - 2 - rawLen)
-  return `${rgb(...BORDER)}\u2502${RESET}${content}${' '.repeat(pad)}${rgb(...BORDER)}\u2502${RESET}`
+  return `${rgb(...BORDER)}│${RESET}${content}${' '.repeat(pad)}${rgb(...BORDER)}│${RESET}`
 }
 
 // ─── Main ─────────────────────────────────────────────────────────────────────
 
 export function printStartupScreen(): void {
-  // Skip in non-interactive / CI / print mode
   if (process.env.CI || !process.stdout.isTTY) return
 
   const p = detectProvider()
-  const W = 62
-  const out: string[] = []
+  const W = 72
+  const w = process.stdout.write.bind(process.stdout)
 
-  out.push('')
+  w(HIDE_CURSOR)
+  w('\n')
 
-  // Gradient logo
-  const allLogo = [...LOGO_OPEN, '', ...LOGO_CLAUDE]
+  // ── Phase 1: Reveal logo lines with glow → fade animation ──
+  const allLogo = [...LOGO_PERTRELLY, '', ...LOGO_CLAUDINHO]
   const total = allLogo.length
-  for (let i = 0; i < total; i++) {
-    const t = total > 1 ? i / (total - 1) : 0
-    if (allLogo[i] === '') {
-      out.push('')
-    } else {
-      out.push(paintLine(allLogo[i], SUNSET_GRAD, t))
+
+  for (let lineIdx = 0; lineIdx < total; lineIdx++) {
+    if (allLogo[lineIdx] === '') {
+      w('\n')
+      sleepSync(25)
+      continue
     }
+    const t = total > 1 ? lineIdx / (total - 1) : 0
+
+    // Show in bright glow first
+    w(paintLine(allLogo[lineIdx], GLOW_GRAD, t) + '\n')
+    sleepSync(30)
+
+    // Overwrite with final gradient color
+    w(`${ESC}1A${ESC}2K\r`)
+    w(paintLine(allLogo[lineIdx], BLUE_GRAD, t) + '\n')
   }
 
-  out.push('')
+  sleepSync(60)
+  w('\n')
 
-  // Tagline
-  out.push(`  ${rgb(...ACCENT)}\u2726${RESET} ${rgb(...CREAM)}Any model. Every tool. Zero limits.${RESET} ${rgb(...ACCENT)}\u2726${RESET}`)
-  out.push('')
+  // ── Phase 2: Tagline typed out character by character ──
+  const tagText = 'Any model. Every tool. Zero limits.'
+  const sparkle = '✦'
 
-  // Provider info box
-  out.push(`${rgb(...BORDER)}\u2554${'\u2550'.repeat(W - 2)}\u2557${RESET}`)
+  w(`  ${rgb(...ACCENT)}${sparkle}${RESET} `)
+  for (let i = 0; i < tagText.length; i++) {
+    const t = i / Math.max(1, tagText.length - 1)
+    const col = gradAt([[180, 230, 255], [220, 240, 255], [255, 255, 255]], t)
+    w(`${BOLD}${rgb(...col)}${tagText[i]}${RESET}`)
+    sleepSync(10)
+  }
+  w(` ${rgb(...ACCENT)}${sparkle}${RESET}\n`)
+
+  sleepSync(80)
+  w('\n')
+
+  // ── Phase 3: Provider box with sweep-in animation ──
+  // Top border sweeps in
+  const borderChar = '═'
+  const innerW = W - 2
+  w(`${rgb(...BORDER)}╔`)
+  for (let i = 0; i < innerW; i++) {
+    w(`${borderChar}`)
+    if (i % 8 === 0) sleepSync(3)
+  }
+  w(`╗${RESET}\n`)
+  sleepSync(20)
 
   const lbl = (k: string, v: string, c: RGB = CREAM): [string, number] => {
     const padK = k.padEnd(9)
     return [` ${DIM}${rgb(...DIMCOL)}${padK}${RESET} ${rgb(...c)}${v}${RESET}`, ` ${padK} ${v}`.length]
   }
 
-  const provC: RGB = p.isLocal ? [130, 175, 130] : ACCENT
-  let [r, l] = lbl('Provider', p.name, provC)
-  out.push(boxRow(r, W, l))
-  ;[r, l] = lbl('Model', p.model)
-  out.push(boxRow(r, W, l))
-  const ep = p.baseUrl.length > 38 ? p.baseUrl.slice(0, 35) + '...' : p.baseUrl
-  ;[r, l] = lbl('Endpoint', ep)
-  out.push(boxRow(r, W, l))
+  const provC: RGB = p.isLocal ? [100, 200, 140] : ACCENT
 
-  out.push(`${rgb(...BORDER)}\u2560${'\u2550'.repeat(W - 2)}\u2563${RESET}`)
+  const rows: [string, number][] = [
+    lbl('Provider', p.name, provC),
+    lbl('Model', p.model),
+    lbl('Endpoint', p.baseUrl.length > 45 ? p.baseUrl.slice(0, 42) + '...' : p.baseUrl),
+  ]
 
-  const sC: RGB = p.isLocal ? [130, 175, 130] : ACCENT
+  for (const [r, l] of rows) {
+    w(boxRow(r, W, l) + '\n')
+    sleepSync(40)
+  }
+
+  // Separator
+  w(`${rgb(...BORDER)}╠${'═'.repeat(innerW)}╣${RESET}\n`)
+  sleepSync(20)
+
+  // Status row with pulsing dot
+  const sC: RGB = p.isLocal ? [100, 200, 140] : ACCENT
   const sL = p.isLocal ? 'local' : 'cloud'
-  const sRow = ` ${rgb(...sC)}\u25cf${RESET} ${DIM}${rgb(...DIMCOL)}${sL}${RESET}    ${DIM}${rgb(...DIMCOL)}Ready \u2014 type ${RESET}${rgb(...ACCENT)}/help${RESET}${DIM}${rgb(...DIMCOL)} to begin${RESET}`
-  const sLen = ` \u25cf ${sL}    Ready \u2014 type /help to begin`.length
-  out.push(boxRow(sRow, W, sLen))
+  const sRow = ` ${rgb(...sC)}●${RESET} ${DIM}${rgb(...DIMCOL)}${sL}${RESET}    ${DIM}${rgb(...DIMCOL)}Ready — type ${RESET}${rgb(...ACCENT)}/help${RESET}${DIM}${rgb(...DIMCOL)} to begin${RESET}`
+  const sLen = ` ● ${sL}    Ready — type /help to begin`.length
+  w(boxRow(sRow, W, sLen) + '\n')
+  sleepSync(20)
 
-  out.push(`${rgb(...BORDER)}\u255a${'\u2550'.repeat(W - 2)}\u255d${RESET}`)
-  out.push(`  ${DIM}${rgb(...DIMCOL)}openclaude ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}`)
-  out.push('')
+  // Bottom border
+  w(`${rgb(...BORDER)}╚${'═'.repeat(innerW)}╝${RESET}\n`)
 
-  process.stdout.write(out.join('\n') + '\n')
+  // Version with fade-in
+  w(`  ${DIM}${rgb(...DIMCOL)}pertrellyclaude ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}\n`)
+  w('\n')
+
+  w(SHOW_CURSOR)
 }
