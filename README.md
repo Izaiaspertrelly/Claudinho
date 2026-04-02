@@ -1,5 +1,9 @@
 # PertrellyClaude
 
+<p align="center">
+  <img src="claudinho.png" alt="Pertrelly Claudinho" width="600">
+</p>
+
 Use Claude Code with **any LLM** — not just Claude.
 
 PertrellyClaude lets you use Claude Code with any LLM through an OpenAI-compatible API shim. Plug in GPT-4o, DeepSeek, Gemini, Llama, Mistral, or any model that speaks the OpenAI chat completions API. It also supports the ChatGPT Codex backend for `codexplan` and `codexspark`, and local inference via [Atomic Chat](https://atomic.chat/) on Apple Silicon.
