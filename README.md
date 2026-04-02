@@ -2,7 +2,7 @@
 
 Use Claude Code with **any LLM** — not just Claude.
 
-OpenClaude is a fork of the [Claude Code source leak](https://gitlawb.com/node/repos/z6MkgKkb/instructkr-claude-code) (exposed via npm source maps on March 31, 2026). We added an OpenAI-compatible provider shim so you can plug in GPT-4o, DeepSeek, Gemini, Llama, Mistral, or any model that speaks the OpenAI chat completions API. It now also supports the ChatGPT Codex backend for `codexplan` and `codexspark`, and local inference via [Atomic Chat](https://atomic.chat/) on Apple Silicon.
+OpenClaude lets you use Claude Code with any LLM through an OpenAI-compatible API shim. Plug in GPT-4o, DeepSeek, Gemini, Llama, Mistral, or any model that speaks the OpenAI chat completions API. It also supports the ChatGPT Codex backend for `codexplan` and `codexspark`, and local inference via [Atomic Chat](https://atomic.chat/) on Apple Silicon.
 
 All of Claude Code's tools work — bash, file read/write/edit, grep, glob, agents, tasks, MCP — just powered by whatever model you choose.
 
@@ -22,18 +22,23 @@ If you want source builds, Bun workflows, profile launchers, or full provider ex
 
 ---
 
-## Beginner Install
+## Install
 
-For most users, install the npm package:
+Clone the repository and build:
 
 ```bash
-npm install -g @gitlawb/openclaude
+git clone https://github.com/Izaiaspertrelly/openclaude.git
+cd openclaude
+npm install
+npm run build
 ```
 
-The package name is `@gitlawb/openclaude`, but the command you run is:
+Then run:
 
 ```bash
-openclaude
+npm start
+# or
+node bin/openclaude
 ```
 
 If you install via npm and later see `ripgrep not found`, install ripgrep system-wide and confirm `rg --version` works in the same terminal before starting OpenClaude.
@@ -45,7 +50,9 @@ If you install via npm and later see `ripgrep not found`, install ripgrep system
 ### Windows PowerShell
 
 ```powershell
-npm install -g @gitlawb/openclaude
+git clone https://github.com/Izaiaspertrelly/openclaude.git
+cd openclaude
+npm install && npm run build
 
 $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_API_KEY="sk-your-key-here"
@@ -57,7 +64,9 @@ openclaude
 ### macOS / Linux
 
 ```bash
-npm install -g @gitlawb/openclaude
+git clone https://github.com/Izaiaspertrelly/openclaude.git
+cd openclaude
+npm install && npm run build
 
 export CLAUDE_CODE_USE_OPENAI=1
 export OPENAI_API_KEY=sk-your-key-here
@@ -172,26 +181,10 @@ For best results, use models with strong function/tool calling support.
 
 ---
 
-## Files Changed from Original
+## About
 
-```
-src/services/api/openaiShim.ts   — NEW: OpenAI-compatible API shim (724 lines)
-src/services/api/client.ts       — Routes to shim when CLAUDE_CODE_USE_OPENAI=1
-src/utils/model/providers.ts     — Added 'openai' provider type
-src/utils/model/configs.ts       — Added openai model mappings
-src/utils/model/model.ts         — Respects OPENAI_MODEL for defaults
-src/utils/auth.ts                — Recognizes OpenAI as valid 3P provider
-```
+OpenClaude is provided for educational and research purposes.
 
-6 files changed. 786 lines added. Zero dependencies added.
-
----
-
-## Origin
-
-This is a fork of [instructkr/claude-code](https://gitlawb.com/node/repos/z6MkgKkb/instructkr-claude-code), which mirrored the Claude Code source snapshot that became publicly accessible through an npm source map exposure on March 31, 2026.
-
-The original Claude Code source is the property of Anthropic. This repository is not affiliated with or endorsed by Anthropic.
 
 ---
 

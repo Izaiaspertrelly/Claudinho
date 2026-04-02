@@ -2,7 +2,7 @@
  * OpenClaude startup screen — filled-block text logo with sunset gradient.
  * Called once at CLI startup before the Ink UI renders.
  *
- * Addresses: https://github.com/Gitlawb/openclaude/issues/55
+ * Addresses: https://github.com/Izaiaspertrelly/openclaude/issues/55
  */
 
 declare const MACRO: { VERSION: string; DISPLAY_VERSION?: string }
