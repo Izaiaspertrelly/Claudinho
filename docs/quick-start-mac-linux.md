@@ -18,7 +18,7 @@ npm --version
 ## 2. Install OpenClaude
 
 ```bash
-npm install -g openclaude
+npm install -g pertrellyclaude
 ```
 
 ## 3. Pick One Provider
@@ -92,7 +92,7 @@ Check the basics:
 ## 6. Updating OpenClaude
 
 ```bash
-npm install -g openclaude@latest
+npm install -g pertrellyclaude@latest
 ```
 
 ## 7. Uninstalling OpenClaude

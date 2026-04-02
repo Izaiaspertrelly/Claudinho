@@ -7,7 +7,7 @@ This guide is for users who want source builds, Bun workflows, provider profiles
 ### Option A: npm
 
 ```bash
-npm install -g openclaude
+npm install -g pertrellyclaude
 ```
 
 ### Option B: From source with Bun

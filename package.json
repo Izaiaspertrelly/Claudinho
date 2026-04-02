@@ -1,10 +1,10 @@
 {
-  "name": "openclaude",
+  "name": "pertrellyclaude",
   "version": "0.1.7",
   "description": "Claude Code opened to any LLM — OpenAI, Gemini, DeepSeek, Ollama, and 200+ models",
   "type": "module",
   "bin": {
-    "openclaude": "./bin/openclaude"
+    "pertrellyclaude": "./bin/openclaude"
   },
   "files": [
     "bin/",
