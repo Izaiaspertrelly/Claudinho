@@ -210,29 +210,47 @@ export function applyConfigEnvironmentVariables(): void {
  * Claudinho: Apply saved provider configuration from global config.
  * Sets the appropriate env vars so the correct provider shim is used.
  */
-function applyClaudinhoProviderConfig(): void {
+export function applyClaudinhoProviderConfig(): void {
   const config = getGlobalConfig() as Record<string, unknown>
   const provider = config.claudinhoProvider as string | undefined
   const apiKey = config.claudinhoApiKey as string | undefined
 
   if (!provider || !apiKey) return
 
+  // Force-overwrite env vars (not ??=) so a stale env from a previous
+  // session can't shadow the saved provider configuration.
   switch (provider) {
     case 'openrouter':
-      process.env.OPENAI_API_KEY ??= apiKey
-      process.env.OPENAI_BASE_URL ??= 'https://openrouter.ai/api/v1'
-      process.env.CLAUDE_CODE_USE_OPENAI ??= '1'
+      process.env.OPENAI_API_KEY = apiKey
+      process.env.OPENAI_BASE_URL = 'https://openrouter.ai/api/v1'
+      process.env.CLAUDE_CODE_USE_OPENAI = '1'
+      // Clear conflicting flags
+      delete process.env.CLAUDE_CODE_USE_GEMINI
+      delete process.env.CLAUDE_CODE_USE_GITHUB
+      delete process.env.CLAUDE_CODE_USE_BEDROCK
+      delete process.env.CLAUDE_CODE_USE_VERTEX
+      delete process.env.ANTHROPIC_API_KEY
       break
     case 'anthropic':
-      process.env.ANTHROPIC_API_KEY ??= apiKey
+      process.env.ANTHROPIC_API_KEY = apiKey
+      delete process.env.CLAUDE_CODE_USE_OPENAI
+      delete process.env.CLAUDE_CODE_USE_GEMINI
+      delete process.env.OPENAI_API_KEY
+      delete process.env.OPENAI_BASE_URL
       break
     case 'openai':
-      process.env.OPENAI_API_KEY ??= apiKey
-      process.env.CLAUDE_CODE_USE_OPENAI ??= '1'
+      process.env.OPENAI_API_KEY = apiKey
+      process.env.CLAUDE_CODE_USE_OPENAI = '1'
+      delete process.env.CLAUDE_CODE_USE_GEMINI
+      delete process.env.ANTHROPIC_API_KEY
+      delete process.env.OPENAI_BASE_URL
       break
     case 'gemini':
-      process.env.GEMINI_API_KEY ??= apiKey
-      process.env.CLAUDE_CODE_USE_GEMINI ??= '1'
+      process.env.GEMINI_API_KEY = apiKey
+      process.env.CLAUDE_CODE_USE_GEMINI = '1'
+      delete process.env.CLAUDE_CODE_USE_OPENAI
+      delete process.env.ANTHROPIC_API_KEY
+      delete process.env.OPENAI_API_KEY
       break
   }
 }
