@@ -122,6 +122,11 @@ const TRUSTED_SETTING_SOURCES = [
  * fully established via applyConfigEnvironmentVariables().
  */
 export function applySafeConfigEnvironmentVariables(): void {
+  // Claudinho: Restore the saved provider/API-key env vars as early as
+  // possible so that StartupScreen provider detection sees the right
+  // values instead of falling through to Anthropic.
+  applyClaudinhoProviderConfig()
+
   // Capture CCD spawn-env keys before any settings.env is applied (once).
   if (ccdSpawnEnvKeys === undefined) {
     ccdSpawnEnvKeys =
