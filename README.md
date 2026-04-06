@@ -1,12 +1,12 @@
-# PertrellyClaude
+# Claudinho
 
 <p align="center">
-  <img src="claudinho.png" alt="Pertrelly Claudinho" width="600">
+  <img src="claudinho.png" alt="Claudinho" width="600">
 </p>
 
-Use Claude Code with **any LLM** — not just Claude.
+Use Claude Code with **any LLM** — powered by API keys only, no OAuth required.
 
-PertrellyClaude lets you use Claude Code with any LLM through an OpenAI-compatible API shim. Plug in GPT-4o, DeepSeek, Gemini, Llama, Mistral, or any model that speaks the OpenAI chat completions API. It also supports the ChatGPT Codex backend for `codexplan` and `codexspark`, and local inference via [Atomic Chat](https://atomic.chat/) on Apple Silicon.
+Claudinho lets you use Claude Code with any LLM through OpenRouter, OpenAI, Anthropic, or Google Gemini API keys. Plug in GPT-4o, DeepSeek, Gemini, Llama, Mistral, Claude, or any model available through OpenRouter (200+ models).
 
 All of Claude Code's tools work — bash, file read/write/edit, grep, glob, agents, tasks, MCP — just powered by whatever model you choose.
 
@@ -15,14 +15,16 @@ All of Claude Code's tools work — bash, file read/write/edit, grep, glob, agen
 ## Install
 
 ```bash
-npm install -g pertrellyclaude
+npm install -g claudinho
 ```
 
 Then just run:
 
 ```bash
-pertrellyclaude
+claudinho
 ```
+
+On first run, Claudinho will ask you to choose a provider and enter your API key. That's it!
 
 > If you see `ripgrep not found`, install ripgrep system-wide and confirm `rg --version` works before starting.
 
@@ -30,40 +32,44 @@ pertrellyclaude
 
 ## Quick Start
 
-### Windows PowerShell
+### Option 1: Interactive Setup (Recommended)
 
-```powershell
-npm install -g pertrellyclaude
+Just run `claudinho` — it will guide you through choosing a provider and entering your API key.
 
-$env:CLAUDE_CODE_USE_OPENAI="1"
-$env:OPENAI_API_KEY="sk-your-key-here"
-$env:OPENAI_MODEL="gpt-4o"
+### Option 2: Environment Variables
 
-pertrellyclaude
-```
-
-### macOS / Linux
+#### OpenRouter (recommended — 200+ models)
 
 ```bash
-npm install -g pertrellyclaude
+export CLAUDE_CODE_USE_OPENAI=1
+export OPENAI_API_KEY=sk-or-your-key-here
+export OPENAI_BASE_URL=https://openrouter.ai/api/v1
+claudinho
+```
 
+#### Anthropic (direct)
+
+```bash
+export ANTHROPIC_API_KEY=sk-ant-your-key-here
+claudinho
+```
+
+#### OpenAI
+
+```bash
 export CLAUDE_CODE_USE_OPENAI=1
 export OPENAI_API_KEY=sk-your-key-here
 export OPENAI_MODEL=gpt-4o
-
-pertrellyclaude
+claudinho
 ```
 
-That's it. You're running Claude Code with OpenAI.
+#### Google Gemini
 
----
-
-## Guides
-
-- [Non-Technical Setup](docs/non-technical-setup.md) — easiest path, copy-paste steps
-- [Windows Quick Start](docs/quick-start-windows.md)
-- [macOS / Linux Quick Start](docs/quick-start-mac-linux.md)
-- [Advanced Setup](docs/advanced-setup.md) — source builds, Bun, profiles, more providers
+```bash
+export CLAUDE_CODE_USE_GEMINI=1
+export GEMINI_API_KEY=your-key-here
+claudinho
+```
 
 ---
 
@@ -71,12 +77,11 @@ That's it. You're running Claude Code with OpenAI.
 
 | Provider | Best For |
 |----------|----------|
-| **OpenAI** | Best default if you have an API key |
-| **Ollama** | Run models locally on your machine |
-| **Codex** | If you use the ChatGPT Codex backend |
-| **Atomic Chat** | Local inference on Apple Silicon |
-| **DeepSeek** | Great quality, fast |
+| **OpenRouter** | Access to 200+ models with a single API key |
+| **Anthropic** | Direct access to Claude models |
+| **OpenAI** | GPT-4o and other OpenAI models |
 | **Gemini** | Google's models via API |
+| **Ollama** | Run models locally on your machine |
 
 ---
 
@@ -84,7 +89,7 @@ That's it. You're running Claude Code with OpenAI.
 
 - **All tools**: Bash, FileRead, FileWrite, FileEdit, Glob, Grep, WebFetch, WebSearch, Agent, MCP, LSP, NotebookEdit, Tasks
 - **Streaming**: Real-time token streaming
-- **Tool calling**: Multi-step tool chains (the model calls tools, gets results, continues)
+- **Tool calling**: Multi-step tool chains
 - **Images**: Base64 and URL images passed to vision models
 - **Slash commands**: /commit, /review, /compact, /diff, /doctor, etc.
 - **Sub-agents**: AgentTool spawns sub-agents using the same provider
@@ -92,26 +97,7 @@ That's it. You're running Claude Code with OpenAI.
 
 ---
 
-## Model Quality Notes
-
-| Model | Tool Calling | Code Quality | Speed |
-|-------|-------------|-------------|-------|
-| GPT-4o | Excellent | Excellent | Fast |
-| DeepSeek-V3 | Great | Great | Fast |
-| Gemini 2.0 Flash | Great | Good | Very Fast |
-| Llama 3.3 70B | Good | Good | Medium |
-| Mistral Large | Good | Good | Fast |
-| GPT-4o-mini | Good | Good | Very Fast |
-| Qwen 2.5 72B | Good | Good | Medium |
-| Smaller models (<7B) | Limited | Limited | Very Fast |
-
-For best results, use models with strong function/tool calling support.
-
----
-
 ## How It Works
-
-The shim sits between Claude Code and the LLM API:
 
 ```
 Claude Code Tool System
@@ -126,29 +112,21 @@ Claude Code Tool System
   OpenAI Chat Completions API
         |
         v
-  Any compatible model
+  Any compatible model (via OpenRouter, OpenAI, etc.)
 ```
-
-It translates:
-- Anthropic message blocks → OpenAI messages
-- Anthropic tool_use/tool_result → OpenAI function calls
-- OpenAI SSE streaming → Anthropic stream events
-- Anthropic system prompt arrays → OpenAI system messages
-
-The rest of Claude Code doesn't know it's talking to a different model.
 
 ---
 
 ## Update
 
 ```bash
-npm update -g pertrellyclaude
+npm update -g claudinho
 ```
 
 ## Uninstall
 
 ```bash
-npm uninstall -g pertrellyclaude
+npm uninstall -g claudinho
 ```
 
 ---

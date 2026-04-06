@@ -257,7 +257,7 @@ export function printStartupScreen(): void {
   w(`${rgb(...BORDER)}╚${'═'.repeat(innerW)}╝${RESET}\n`)
 
   // Version with fade-in
-  w(`  ${DIM}${rgb(...DIMCOL)}pertrellyclaude ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}\n`)
+  w(`  ${DIM}${rgb(...DIMCOL)}claudinho ${RESET}${rgb(...ACCENT)}v${MACRO.DISPLAY_VERSION ?? MACRO.VERSION}${RESET}\n`)
   w('\n')
 
   w(SHOW_CURSOR)

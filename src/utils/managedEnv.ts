@@ -185,6 +185,9 @@ export function applySafeConfigEnvironmentVariables(): void {
  * dangerous environment variables such as LD_PRELOAD, PATH, etc.
  */
 export function applyConfigEnvironmentVariables(): void {
+  // Claudinho: Restore saved provider API key from global config
+  applyClaudinhoProviderConfig()
+
   Object.assign(process.env, filterSettingsEnv(getGlobalConfig().env))
 
   Object.assign(process.env, filterSettingsEnv(getSettings_DEPRECATED()?.env))
@@ -196,4 +199,35 @@ export function applyConfigEnvironmentVariables(): void {
 
   // Reconfigure proxy/mTLS agents to pick up any proxy env vars from settings
   configureGlobalAgents()
+}
+
+/**
+ * Claudinho: Apply saved provider configuration from global config.
+ * Sets the appropriate env vars so the correct provider shim is used.
+ */
+function applyClaudinhoProviderConfig(): void {
+  const config = getGlobalConfig() as Record<string, unknown>
+  const provider = config.claudinhoProvider as string | undefined
+  const apiKey = config.claudinhoApiKey as string | undefined
+
+  if (!provider || !apiKey) return
+
+  switch (provider) {
+    case 'openrouter':
+      process.env.OPENAI_API_KEY ??= apiKey
+      process.env.OPENAI_BASE_URL ??= 'https://openrouter.ai/api/v1'
+      process.env.CLAUDE_CODE_USE_OPENAI ??= '1'
+      break
+    case 'anthropic':
+      process.env.ANTHROPIC_API_KEY ??= apiKey
+      break
+    case 'openai':
+      process.env.OPENAI_API_KEY ??= apiKey
+      process.env.CLAUDE_CODE_USE_OPENAI ??= '1'
+      break
+    case 'gemini':
+      process.env.GEMINI_API_KEY ??= apiKey
+      process.env.CLAUDE_CODE_USE_GEMINI ??= '1'
+      break
+  }
 }

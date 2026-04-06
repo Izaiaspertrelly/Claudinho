@@ -1,4 +1,4 @@
-# OpenClaude Quick Start for Windows
+# Claudinho Quick Start for Windows
 
 This guide uses Windows PowerShell.
 
@@ -15,10 +15,10 @@ node --version
 npm --version
 ```
 
-## 2. Install OpenClaude
+## 2. Install Claudinho
 
 ```powershell
-npm install -g pertrellyclaude
+npm install -g claudinho
 ```
 
 ## 3. Pick One Provider
@@ -32,7 +32,7 @@ $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_API_KEY="sk-your-key-here"
 $env:OPENAI_MODEL="gpt-4o"
 
-pertrellyclaude
+claudinho
 ```
 
 ### Option B: DeepSeek
@@ -43,7 +43,7 @@ $env:OPENAI_API_KEY="sk-your-key-here"
 $env:OPENAI_BASE_URL="https://api.deepseek.com/v1"
 $env:OPENAI_MODEL="deepseek-chat"
 
-pertrellyclaude
+claudinho
 ```
 
 ### Option C: Ollama
@@ -61,17 +61,17 @@ $env:CLAUDE_CODE_USE_OPENAI="1"
 $env:OPENAI_BASE_URL="http://localhost:11434/v1"
 $env:OPENAI_MODEL="llama3.1:8b"
 
-pertrellyclaude
+claudinho
 ```
 
 No API key is needed for Ollama local models.
 
-## 4. If `pertrellyclaude` Is Not Found
+## 4. If `claudinho` Is Not Found
 
 Close PowerShell, open a new one, and try again:
 
 ```powershell
-pertrellyclaude
+claudinho
 ```
 
 ## 5. If Your Provider Fails
@@ -89,16 +89,16 @@ Check the basics:
 - make sure Ollama is running
 - make sure the model was pulled successfully
 
-## 6. Updating OpenClaude
+## 6. Updating Claudinho
 
 ```powershell
-npm install -g pertrellyclaude@latest
+npm install -g claudinho@latest
 ```
 
-## 7. Uninstalling OpenClaude
+## 7. Uninstalling Claudinho
 
 ```powershell
-npm uninstall -g pertrellyclaude
+npm uninstall -g claudinho
 ```
 
 ## Need Advanced Setup?

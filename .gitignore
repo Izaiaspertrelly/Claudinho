@@ -4,5 +4,5 @@ dist/
 .env
 .env.*
 !.env.example
-.openclaude-profile.json
+.claudinho-profile.json
 reports/

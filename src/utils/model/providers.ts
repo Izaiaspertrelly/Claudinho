@@ -29,8 +29,9 @@ export function getAPIProvider(): APIProvider {
               : 'firstParty'
 }
 
+// Claudinho: Never use Anthropic account flow (OAuth). API key only.
 export function usesAnthropicAccountFlow(): boolean {
-  return getAPIProvider() === 'firstParty'
+  return false
 }
 function isCodexModel(): boolean {
   const model = (process.env.OPENAI_MODEL || '').toLowerCase()

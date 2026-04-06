@@ -1,10 +1,10 @@
 {
-  "name": "pertrellyclaude",
+  "name": "claudinho",
   "version": "0.1.8",
   "description": "Claude Code opened to any LLM — OpenAI, Gemini, DeepSeek, Ollama, and 200+ models",
   "type": "module",
   "bin": {
-    "pertrellyclaude": "./bin/openclaude"
+    "claudinho": "./bin/claudinho"
   },
   "files": [
     "bin/",
@@ -125,7 +125,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Izaiaspertrelly/openclaude"
+    "url": "https://github.com/Izaiaspertrelly/claudinho"
   },
   "keywords": [
     "claude-code",

@@ -291,7 +291,7 @@ export function buildProfileSaveMessage(
   }
 
   lines.push(`Profile: ${filePath}`)
-  lines.push('Restart OpenClaude to use it.')
+  lines.push('Restart Claudinho to use it.')
 
   return lines.join('\n')
 }
@@ -308,7 +308,7 @@ function buildUsageText(): string {
     `Current endpoint: ${summary.endpointLabel}`,
     `Saved profile: ${summary.savedProfileLabel}`,
     '',
-    'Choose Auto, Ollama, OpenAI-compatible, Gemini, or Codex, then save a profile for the next OpenClaude restart.',
+    'Choose Auto, Ollama, OpenAI-compatible, Gemini, or Codex, then save a profile for the next Claudinho restart.',
   ].join('\n')
 }
 
@@ -440,7 +440,7 @@ function ProviderChooser({
     options.push({
       label: 'Clear saved profile',
       value: 'clear',
-      description: 'Remove .openclaude-profile.json and return to normal startup',
+      description: 'Remove .claudinho-profile.json and return to normal startup',
     })
   }
 
@@ -452,7 +452,7 @@ function ProviderChooser({
     >
       <Box flexDirection="column" gap={1}>
         <Text>
-          Save a provider profile for the next OpenClaude restart without
+          Save a provider profile for the next Claudinho restart without
           editing environment variables first.
         </Text>
         <Box flexDirection="column">
@@ -925,7 +925,7 @@ function ProviderWizard({ onDone }: { onDone: LocalJSXCommandOnDone }): React.Re
               setStep({ name: 'gemini-key' })
             } else if (value === 'clear') {
               const filePath = deleteProfileFile()
-              onDone(`Removed saved provider profile at ${filePath}. Restart OpenClaude to go back to normal startup.`, {
+              onDone(`Removed saved provider profile at ${filePath}. Restart Claudinho to go back to normal startup.`, {
                 display: 'system',
               })
             } else {
