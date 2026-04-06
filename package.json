@@ -1,6 +1,6 @@
 {
   "name": "claudinho",
-  "version": "0.1.17",
+  "version": "0.1.18",
   "description": "Claudinho — an open-source AI coding CLI by the AI First team. Works with OpenRouter, OpenAI, Anthropic, Gemini, Ollama, and 200+ models.",
   "type": "module",
   "bin": {

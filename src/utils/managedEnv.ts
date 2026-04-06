@@ -214,6 +214,7 @@ export function applyClaudinhoProviderConfig(): void {
   const config = getGlobalConfig() as Record<string, unknown>
   const provider = config.claudinhoProvider as string | undefined
   const apiKey = config.claudinhoApiKey as string | undefined
+  const model = config.claudinhoModel as string | undefined
 
   if (!provider || !apiKey) return
 
@@ -224,7 +225,7 @@ export function applyClaudinhoProviderConfig(): void {
       process.env.OPENAI_API_KEY = apiKey
       process.env.OPENAI_BASE_URL = 'https://openrouter.ai/api/v1'
       process.env.CLAUDE_CODE_USE_OPENAI = '1'
-      // Clear conflicting flags
+      if (model) process.env.OPENAI_MODEL = model
       delete process.env.CLAUDE_CODE_USE_GEMINI
       delete process.env.CLAUDE_CODE_USE_GITHUB
       delete process.env.CLAUDE_CODE_USE_BEDROCK
@@ -233,6 +234,7 @@ export function applyClaudinhoProviderConfig(): void {
       break
     case 'anthropic':
       process.env.ANTHROPIC_API_KEY = apiKey
+      if (model) process.env.ANTHROPIC_MODEL = model
       delete process.env.CLAUDE_CODE_USE_OPENAI
       delete process.env.CLAUDE_CODE_USE_GEMINI
       delete process.env.OPENAI_API_KEY
@@ -241,6 +243,7 @@ export function applyClaudinhoProviderConfig(): void {
     case 'openai':
       process.env.OPENAI_API_KEY = apiKey
       process.env.CLAUDE_CODE_USE_OPENAI = '1'
+      if (model) process.env.OPENAI_MODEL = model
       delete process.env.CLAUDE_CODE_USE_GEMINI
       delete process.env.ANTHROPIC_API_KEY
       delete process.env.OPENAI_BASE_URL
@@ -248,6 +251,7 @@ export function applyClaudinhoProviderConfig(): void {
     case 'gemini':
       process.env.GEMINI_API_KEY = apiKey
       process.env.CLAUDE_CODE_USE_GEMINI = '1'
+      if (model) process.env.GEMINI_MODEL = model
       delete process.env.CLAUDE_CODE_USE_OPENAI
       delete process.env.ANTHROPIC_API_KEY
       delete process.env.OPENAI_API_KEY
